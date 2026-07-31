@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetSegura 60+ | Guia Interativo de Segurança Digital</title>
+    <style>
+        /* ==========================================================================
+           VARIÁVEIS DE DESIGN E ACESSIBILIDADE (DESIGN TOKENS)
+           ========================================================================== */
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #1A202C;
+            --text-secondary: #4A5568;
+            --primary-color: #0B57D0;
+            --primary-hover: #0842A0;
+            --secondary-color: #2D3748;
+            --alert-bg: #FFF3CD;
+            --alert-border: #D97706;
+            --alert-text: #78350F;
+            --success-color: #15803D;
+            --success-bg: #DCFCE7;
+            --danger-color: #B91C1C;
+            --danger-bg: #FEE2E2;
+            --border-color: #CBD5E1;
+            --font-size-base: 22px; /* Fonte base ampliada para idosos */
+            --focus-ring: 4px solid #FFB800;
+        }
+
+        /* MODO ALTO CONTRASTE */
+        body.high-contrast {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --text-color: #FFFFFF;
+            --text-secondary: #E2E8F0;
+            --primary-color: #FFFF00;
+            --primary-hover: #E6E600;
+            --secondary-color: #FFFFFF;
+            --alert-bg: #332A00;
+            --alert-border: #FFFF00;
+            --alert-text: #FFFF00;
+            --success-color: #00FF00;
+            --success-bg: #003300;
+            --danger-color: #FF6666;
+            --danger-bg: #330000;
+            --border-color: #FFFFFF;
+        }
+
+        body.high-contrast .btn-primary {
+            color: #000000 !important;
+            font-weight: 900;
+        }
+
+        body.high-contrast .card {
+            border: 3px solid #FFFFFF;
+        }
+
+        /* RESET E BASE */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 60px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* ACESSIBILIDADE - FOCO TECLADO */
+        :focus-visible {
+            outline: var(--focus-ring) !important;
+            outline-offset: 4px;
+        }
+
+        /* BARRA DE FERRAMENTAS DE ACESSIBILIDADE FIXA */
+        .accessibility-bar {
+            background-color: var(--secondary-color);
+            color: #FFFFFF;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .accessibility-bar label {
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .acc-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-acc {
+            background-color: #FFFFFF;
+            color: #000000;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 48px; /* Área de toque recomendada */
+        }
+
+        .btn-acc:hover {
+            background-color: #E2E8F0;
+        }
+
+        /* CABEÇALHO */
+        header {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            padding: 35px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--border-color);
+        }
+
+        body.high-contrast header {
+            background-color: #121212;
+            color: #FFFF00;
+            border-bottom: 5px solid #FFFF00;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* CONTAINER PRINCIPAL E ABAS */
+        main {
+            max-width: 960px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 200px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 3px solid var(--border-color);
+            padding: 16px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            min-height: 60px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            border-color: var(--primary-color);
+        }
+
+        body.high-contrast .tab-btn.active {
+            background-color: #FFFF00;
+            color: #000000;
+            border-color: #FFFF00;
+        }
+
+        /* SEÇÕES DE CONTEÚDO */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CARTÕES DE DICAS */
+        .card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.high-contrast .card-title {
+            color: #FFFF00;
+        }
+
+        .card p {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* CAIXAS DE ALERTA DENTRO DOS CARTÕES */
+        .alert-box {
+            background-color: var(--alert-bg);
+            border-left: 8px solid var(--alert-border);
+            color: var(--alert-text);
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* BOTÃO DE OUVIR (SÍNTESE DE VOZ) */
+        .btn-audio {
+            background-color: #E2E8F0;
+            color: #000000;
+            border: 2px solid #4A5568;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 0.85em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .btn-audio:hover {
+            background-color: #CBD5E1;
+        }
+
+        /* ESTILOS DO SIMULADOR (QUIZ) */
+        .quiz-option {
+            width: 100%;
+            background-color: var(--card-bg);
+            border: 3px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--text-color);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(11, 87, 208, 0.05);
+        }
+
+        .feedback-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background-color: var(--success-bg);
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background-color: var(--danger-bg);
+            color: var(--danger-color);
+            border: 2px solid var(--danger-color);
+        }
+
+        /* FERRAMENTA DE CHECAGEM DE MENSAGEM */
+        .checker-input {
+            width: 100%;
+            height: 120px;
+            font-size: 0.9em;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            padding: 16px 28px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            min-height: 55px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* SEÇÃO DE EMERGÊNCIA */
+        .emergency-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--danger-color);
+            color: #FFFFFF;
+            text-align: center;
+            text-decoration: none;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        body.high-contrast .emergency-btn {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            border: 2px solid #FFFFFF;
+        }
+
+        /* RODAPÉ */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        /* RESPONSIVIDADE PARA TELAS PEQUENAS */
+        @media (max-width: 600px) {
+            :root {
+                --font-size-base: 18px;
+            }
+
+            .accessibility-bar {
+                justify-content: center;
+            }
+
+            .card-header {
+                flex-direction: column;
+            }
+
+            .btn-audio {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA FIXA DE ACESSIBILIDADE -->
+    <div class="accessibility-bar" role="region" aria-label="Controles de Acessibilidade">
+        <span><strong>Acessibilidade:</strong></span>
+        <div class="acc-buttons">
+            <button class="btn-acc" onclick="changeFontSize(1)" aria-label="Aumentar tamanho do texto">
+                <span>A+</span> Aumentar Texto
+            </button>
+            <button class="btn-acc" onclick="changeFontSize(-1)" aria-label="Diminuir tamanho do texto">
+                <span>A-</span> Diminuir Texto
+            </button>
+            <button class="btn-acc" onclick="toggleHighContrast()" aria-label="Alternar alto contraste">
+                👁️ Alto Contraste
+            </button>
+            <button class="btn-acc" onclick="stopAudio()" aria-label="Parar leitura em voz alta">
+                🔇 Parar Voz
+            </button>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO DO APLICATIVO -->
+    <header>
+        <h1>🛡️ NetSegura 60+</h1>
+        <p>Sua proteção simples, clara e direta para navegar na internet sem medo de golpes.</p>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL COM NAVEGAÇÃO -->
+    <main>
+        <!-- NAVEGAÇÃO POR ABAS -->
+        <nav class="nav-tabs" role="tablist" aria-label="Menu Principal">
+            <button class="tab-btn active" role="tab" aria-selected="true" onclick="openTab(event, 'dicas')">
+                📖 Dicas de Segurança
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'simulador')">
+                🎯 Teste: É Golpe?
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'checador')">
+                🔍 Checar Mensagem
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" onclick="openTab(event, 'emergencia')">
+                🚨 O que Fazer Agora?
+            </button>
+        </nav>
+
+        <!-- ABA 1: DICAS DE SEGURANÇA -->
+        <section id="dicas" class="tab-content active" role="tabpanel">
+            
+            <article class="card">
+                <div class="card-header">
+                    <h2 class="card-title">💬 1. Golpe do Parente no WhatsApp</h2>
+                    <button class="btn-audio" onclick="readText(this)">🔊 Ouvir Dica</button>
+                </div>
+                <p>Se você receber uma mensagem de um número novo dizendo ser seu filho, neto ou parente pedindo dinheiro urgente porque "o celular quebrou", <strong>mantenha a calma</strong>.</p>
+                <div class="alert-box">
+                    ⚠️ REGRA DE OURO: Nunca faça PIX ou transferência antes de ligar para o número ANTIGO que você já tinha salvo do seu familiar para confirmar!
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🏦 2. Ligações Falsas do Banco</h2>
+                    <button class="btn-audio" onclick="readText(this)">🔊 Ouvir Dica</button>
+                </div>
+                <p>Nenhum banco liga para pedir senhas, códigos de validação por SMS ou para pedir que você faça uma "transferência de teste" para cancelar uma fraude.</p>
+                <div class="alert-box">
+                    ⚠️ REGRA DE OURO: Se receber uma ligação dessas, DESLIGUE na hora. Não converse com a pessoa e procure o gerente da sua agência física se tiver dúvida.
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🎁 3. Links Estranhos e Prêmios Grátis</h2>
+                    <button class="btn-audio" onclick="readText(this)">🔊 Ouvir Dica</button>
+                </div>
+                <p>Mensagens prometendo presentes de marcas conhecidas, dinheiro do governo ou descontos milagrosos costumam ser armadilhas para roubar dados do seu celular.</p>
+                <div class="alert-box">
+                    ⚠️ REGRA DE OURO: Não clique no endereço azul da mensagem. Apague a mensagem imediatamente.
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔑 4. Cuidados com Senhas</h2>
+                    <button class="btn-audio" onclick="readText(this)">🔊 Ouvir Dica</button>
+                </div>
+                <p>Evite usar datas de nascimento, nomes de familiares ou "123456" como senha. Crie senhas usando frases simples que só você conhece.</p>
+                <div class="alert-box">
+                    ⚠️ REGRA DE OURO: Nunca anote suas senhas em um papel colado atrás da capinha do celular.
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ABA 2: SIMULADOR INTERATIVO -->
+        <section id="simulador" class="tab-content" role="tabpanel">
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 20px;">🎯 Treine sua mente: Isso é seguro ou é Golpe?</h2>
+                <p>Leia a situação abaixo e escolha a melhor decisão a tomar:</p>
+                
+                <div style="background-color: rgba(0,0,0,0.03); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <p><strong>CENÁRIO:</strong> Você recebe uma mensagem no WhatsApp do seu filho dizendo: <em>"Mãe/Pai, mudei de número. Estou com um problema no banco e preciso pagar uma conta urgente de R$ 500 hoje. Pode fazer esse PIX para mim?"</em></p>
+                </div>
+
+                <button class="quiz-option" onclick="answerQuiz(false, 'quiz-feedback')">
+                    ❌ Fazer o PIX imediatamente para ajudar meu filho.
+                </button>
+                
+                <button class="quiz-option" onclick="answerQuiz(true, 'quiz-feedback')">
+                    ✅ Ligar imediatamente para o número ANTIGO do meu filho para confirmar se é ele mesmo.
+                </button>
+
+                <button class="quiz-option" onclick="answerQuiz(false, 'quiz-feedback')">
+                    ❌ Enviar a senha do meu banco por mensagem para ele resolver a conta.
+                </button>
+
+                <div id="quiz-feedback" class="feedback-box"></div>
+            </div>
+        </section>
+
+        <!-- ABA 3: CHECADOR DE MENSAGENS -->
+        <section id="checador" class="tab-content" role="tabpanel">
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 15px;">🔍 Testar Texto ou Mensagem Suspeita</h2>
+                <p>Cole ou digite abaixo o texto da mensagem que você recebeu para analisarmos palavras suspeitas comuns em golpes:</p>
+                
+                <textarea id="message-text" class="checker-input" placeholder="Cole aqui a mensagem recebida (ex: 'Clique aqui para resgatar seu benefício...')" aria-label="Digite ou cole a mensagem suspeita aqui"></textarea>
+                
+                <button class="btn-primary" onclick="checkMessage()">
+                    🔎 Analisar Mensagem
+                </button>
+
+                <div id="checker-feedback" class="feedback-box"></div>
+            </div>
+        </section>
+
+        <!-- ABA 4: EMERGÊNCIA -->
+        <section id="emergencia" class="tab-content" role="tabpanel">
+            <div class="card">
+                <h2 class="card-title" style="margin-bottom: 20px;">🚨 Acho que caí em um golpe. O que fazer?</h2>
+                
+                <div style="margin-bottom: 25px;">
+                    <p><strong>1. Ligue para o seu banco:</strong> Avise imediatamente a central do seu banco para tentar bloquear a transferência realizada ou cancelar seus cartões.</p>
+                    <p><strong>2. Avise a família:</strong> Conte para um parente de confiança o que aconteceu para que ele lhe ajude a tomar as medidas legais.</p>
+                    <p><strong>3. Registre um B.O.:</strong> Faça um Boletim de Ocorrência na Polícia Civil (pode ser feito presencialmente ou pela internet).</p>
+                </div>
+
+                <a href="tel:190" class="emergency-btn">
+                    📞 Ligue 190 - Polícia Militar
+                </a>
+                
+                <div class="alert-box" style="text-align: center;">
+                    💡 Lembre-se: Você não é culpado. Os golpistas são profissionais em enganar as pessoas. Busque apoio imediatamente!
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer>
+        <p><strong>NetSegura 60+</strong> — Projeto voltado para a inclusão e segurança digital de idosos.</p>
+        <p>Linguagem acessível e design focado no bem-estar digital da pessoa idosa.</p>
+    </footer>
+
+    <!-- JAVASCRIPT SIMPLES E NATIVO PARA INTERAÇÕES -->
+    <script>
+        // ==========================================
+        // CONTROLE DE NAVEGAÇÃO DAS ABAS
+        // ==========================================
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            const tabBtns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove("active");
+                tabBtns[i].setAttribute("aria-selected", "false");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            evt.currentTarget.setAttribute("aria-selected", "true");
+            
+            // Interrompe leitura de áudio se trocar de aba
+            stopAudio();
+        }
+
+        // ==========================================
+        // AJUSTE DINÂMICO DE FONTE
+        // ==========================================
+        let currentFontSize = 22; // Tamanho base inicial
+        function changeFontSize(delta) {
+            currentFontSize += delta * 2;
+            if (currentFontSize < 16) currentFontSize = 16;
+            if (currentFontSize > 34) currentFontSize = 34;
+            document.documentElement.style.setProperty('--font-size-base', currentFontSize + 'px');
+        }
+
+        // ==========================================
+        // ALTO CONTRASTE
+        // ==========================================
+        function toggleHighContrast() {
+            document.body.classList.toggle("high-contrast");
+        }
+
+        // ==========================================
+        // LEITURA EM VOZ ALTA (SÍNTESE DE VOZ)
+        // ==========================================
+        function readText(buttonElement) {
+            stopAudio(); // Para leituras anteriores
+
+            if (!('speechSynthesis' in window)) {
+                alert("Seu navegador não suporta leitura de voz.");
+                return;
+            }
+
+            const card = buttonElement.closest('.card');
+            const textToRead = card.innerText.replace("🔊 Ouvir Dica", "");
+
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 0.9; // Velocidade ligeiramente reduzida para idosos
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function stopAudio() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DO SIMULADOR (QUIZ)
+        // ==========================================
+        function answerQuiz(isCorrect, feedbackId) {
+            const feedbackBox = document.getElementById(feedbackId);
+            if (isCorrect) {
+                feedbackBox.className = "feedback-box correct";
+                feedbackBox.innerHTML = "🎉 PARABÉNS! Resposta exata!<br>Ligar para o número antigo é a forma mais confiável de saber se realmente é o seu parente.";
+            } else {
+                feedbackBox.className = "feedback-box incorrect";
+                feedbackBox.innerHTML = "⚠️ CUIDADO! Essa atitude é arriscada.<br>Golpistas usam a urgência para fazer você agir sem pensar. Sempre confirme por telefone antigo primeiro.";
+            }
+        }
+
+        // ==========================================
+        // CHECADOR DE MENSAGENS SUSPEITAS
+        // ==========================================
+        function checkMessage() {
+            const input = document.getElementById("message-text").value.toLowerCase();
+            const feedback = document.getElementById("checker-feedback");
+
+            if (!input.trim()) {
+                alert("Por favor, digite ou cole uma mensagem para analisar.");
+                return;
+            }
+
+            // Palavras-chave comumente usadas em fraudes
+            const suspiciousKeywords = [
+                "pix", "urgente", "bloqueado", "mudou de numero", "mudei de numero",
+                "promocao", "premio", "gratuit", "clique", "link", "recadastro",
+                "atualizacao", "conta", "senha", "banco", "beneficio", "governo"
+            ];
+
+            let matches = [];
+            suspiciousKeywords.forEach(word => {
+                if (input.includes(word)) {
+                    matches.push(word);
+                }
+            });
+
+            if (matches.length > 0) {
+                feedback.className = "feedback-box incorrect";
+                feedback.innerHTML = `🚨 <strong>MENSAGEM SUSPEITA DETECTADA!</strong><br>
+                Identificamos termos comuns em golpes (como: <em>${matches.join(', ')}</em>).<br>
+                <strong>Recomendação:</strong> Não clique em links e não faça pagamentos. Converse com um familiar antes de fazer qualquer coisa!`;
+            } else {
+                feedback.className = "feedback-box correct";
+                feedback.innerHTML = `✅ <strong>Nenhuma palavra suspeita comum encontrada.</strong><br>
+                Mesmo assim, lembre-se: se a mensagem pedir dinheiro ou dados pessoais, consulte sempre um familiar de sua confiança!`;
+            }
+        }
+    </script>
+</body>
+</html>
